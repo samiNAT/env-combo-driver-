@@ -10,13 +10,14 @@ This Linux kernel module implements a fictional I2C environmental sensor driver 
    [Yocto QEMU Learning Path](https://learn.arm.com/learning-paths/embedded-and-microcontrollers/yocto_qemu/yocto_build/)
 
 2. Checkout Yocto Branch:
+   
    $ git checkout tags/yocto-4.0.26 -b yocto-4.0.26-local
 
-3. Initialize Build Environment:
+4. Initialize Build Environment:
 
    $ source oe-init-build-env build-qemu-arm64
 
-4. Edit Configuration:
+5. Edit Configuration:
    Open `conf/local.conf` and ensure the following lines are added:
 
    MACHINE = "qemuarm64"
