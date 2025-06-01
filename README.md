@@ -149,16 +149,20 @@ Sensor sysfs entries should appear under:
 ### Sysfs Paths to Read Values
 
 $ cat /sys/bus/iio/devices/iio:device0/in_temp0_raw
+
 $ cat /sys/bus/iio/devices/iio:device0/in_humidityrelative1_raw
 
 ### 2. scripted Testing with test_env-combo.sh:
 ### Transfer & Run Test Script
 
 Copy the following to the QEMU target via SSH:
+
 * test_env-combo.sh
+  
 Run the test script:
 
 $ chmod +x test_env-combo.sh
+
 $ ./test_env-combo.sh
 
 This script will:
