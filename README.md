@@ -125,11 +125,11 @@ Copy the following to the QEMU target via SSH:
 
 * env-combo.ko
   
-* envcombo_sim.ko
+* i2c-envcombo-sim.ko
   
 ### Load Modules
 
-$ insmod envcombo_sim.ko         # I2C simulator
+$ insmod i2c-envcombo-sim.ko   # I2C simulator
 
 $ insmod env-combo.ko	       # I2C Driver
 
