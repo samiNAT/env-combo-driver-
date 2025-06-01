@@ -31,24 +31,32 @@ This Linux kernel module implements a fictional I2C environmental sensor driver 
 6. Enable IIO Subsystem:
    
    $ bitbake -c menuconfig virtual/kernel
-
+   
    Then in the menu:
+   
    -> Device Drivers
+   
      -> Industrial I/O support (IIO)
+   
        [*] Industrial I/O support
+   
        [*] Enable buffer support within IIO and submodules
+   
        [*] Enable IIO configuration via configfs
+   
        [*] Enable triggered sampling support
+   
        [*] Maximum number of consumers per trigger
+   
        [*] Enable triggered events support
 
 8. Rebuild the Kernel:
-   
+
    $ bitbake virtual/kernel
 
 10. Build Image with Kernel Headers:
-    
-   $ bitbake core-image-minimal
+
+    $ bitbake core-image-minimal
 
 ### Out-of-Tree Module Build
 
@@ -95,19 +103,24 @@ Once booted, you can log in (usually as `root`, no password needed), and proceed
 ## Testing the Driver
 There are two available methods for testing the ENV-COMBO Linux kernel driver:
 
-1. Manual Command Testing:
+### 1. Manual Command Testing:
 ### Copy Modules
+
 Copy the following to the QEMU target via SSH:
+
 * env-combo.ko
+  
 * envcombo_sim.ko
   
 ### Load Modules
-insmod envcombo_sim.ko         # I2C simulator
-insmod env-combo.ko	       # I2C Driver
+
+$ insmod envcombo_sim.ko         # I2C simulator
+
+$ insmod env-combo.ko	       # I2C Driver
 
 ### Create I2C Device (Optional for simulated environments)
 
-echo env-combo 0x39 > /sys/bus/i2c/devices/i2c-0/new_device
+$ echo env-combo 0x39 > /sys/bus/i2c/devices/i2c-0/new_device
 
 ### Verify sysfs Entries
 
@@ -115,15 +128,15 @@ Sensor sysfs entries should appear under:
 
 /sys/bus/iio/devices/iio:device0/
 
-* in_temp0_raw`
-* in_humidityrelative1_raw`
+* in_temp0_raw
+* in_humidityrelative1_raw
 
 ### Sysfs Paths to Read Values
 
 $ cat /sys/bus/iio/devices/iio:device0/in_temp0_raw
 $ cat /sys/bus/iio/devices/iio:device0/in_humidityrelative1_raw
 
-2. Scripted Testing with test_env-comb.c
+### 2. scripted Testing with test_env-combo.sh:
 ### Transfer & Run Test Script
 
 Copy the following to the QEMU target via SSH:
@@ -139,11 +152,7 @@ This script will:
 * Read and print the implemented functionality
 * Check dmesg for logs and errors
 * Cleanly unload the modules
-
-## Module Parameters
-
-No module parameters are required or implemented currently.
-
+  
 ## Additional Considerations
 
 * Ensure kernel configuration changes for IIO are persistent by saving the `.config` file from menuconfig.
