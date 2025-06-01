@@ -49,8 +49,23 @@ This Linux kernel module implements a fictional I2C environmental sensor driver 
        [*] Maximum number of consumers per trigger
    
        [*] Enable triggered events support
+   
+7. Enable I2C
 
-8. Rebuild the Kernel:
+   $ bitbake -c menuconfig virtual/kernel
+   
+   Go to Device Drivers → I2C support
+   Then in the menu:
+
+   -> Device Drivers
+   
+   	->Enable
+        ->I2C support (Press Y)
+   
+	Save and exit.
+
+
+9. Rebuild the Kernel:
 
    $ bitbake virtual/kernel
 
