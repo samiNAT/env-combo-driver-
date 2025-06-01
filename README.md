@@ -20,11 +20,14 @@ This Linux kernel module implements a fictional I2C environmental sensor driver 
    Open `conf/local.conf` and ensure the following lines are added:
 
    MACHINE = "qemuarm64"
+   
    CORE_IMAGE_EXTRA_INSTALL += "openssh"
+   
    TOOLS += "gcc make kernel-dev"
+   
    IMAGE_INSTALL:append = " kernel-devsrc"
 
-5. Enable IIO Subsystem:
+6. Enable IIO Subsystem:
    $ bitbake -c menuconfig virtual/kernel
 
    Then in the menu:
@@ -37,10 +40,10 @@ This Linux kernel module implements a fictional I2C environmental sensor driver 
        [*] Maximum number of consumers per trigger
        [*] Enable triggered events support
 
-6. Rebuild the Kernel:
+7. Rebuild the Kernel:
    $ bitbake virtual/kernel
 
-7. Build Image with Kernel Headers:
+8. Build Image with Kernel Headers:
    $ bitbake core-image-minimal
 
 ### Out-of-Tree Module Build
@@ -48,19 +51,15 @@ This Linux kernel module implements a fictional I2C environmental sensor driver 
 To compile the driver out-of-tree using the appropriate cross-compiler, follow these steps:
 
 1. Open the QEMU devshell to use the correct Yocto environmen
-   bitbake -c devshell virtual/kernel
+   $ bitbake -c devshell virtual/kernel
 
 2. Inside the devshell, navigate to the module source directory and run:
 
-   ```bash
-   make KDIR=/path/to/linux-qemuarm64-standard-build
-   ```
+   $ make KDIR=/path/to/linux-qemuarm64-standard-build
 
 3. To clean the build:
 
-   ```bash
-   make -C /path/to/linux-qemuarm64-standard-build M=$PWD clean
-   ```
+   $ make -C /path/to/linux-qemuarm64-standard-build M=$PWD clean
 
 #### Example Makefile
 
@@ -84,62 +83,52 @@ clean:
 
 After building the Yocto image with the configured kernel and IIO support, you can boot into QEMU as follows:
 
-```bash
-runqemu qemuarm64
-```
+$ runqemu qemuarm64
 
 Once booted, you can log in (usually as `root`, no password needed), and proceed to transfer and test the kernel modules as explained below.
 
 ## Testing the Driver
+There are two available methods for testing the ENV-COMBO Linux kernel driver:
 
+1. Manual Command Testing:
+### Copy Modules
+Copy the following to the QEMU target via SSH:
+* env-combo.ko
+* envcombo_sim.ko
+  
 ### Load Modules
-
-```bash
-insmod envcombo_sim.ko         # If using the I2C simulator
-insmod env-combo.ko
-```
+insmod envcombo_sim.ko         # I2C simulator
+insmod env-combo.ko	       # I2C Driver
 
 ### Create I2C Device (Optional for simulated environments)
 
-```bash
 echo env-combo 0x39 > /sys/bus/i2c/devices/i2c-0/new_device
-```
 
 ### Verify sysfs Entries
 
 Sensor sysfs entries should appear under:
 
-```bash
 /sys/bus/iio/devices/iio:device0/
-```
 
-* `in_temp0_raw`
-* `in_humidityrelative1_raw`
+* in_temp0_raw`
+* in_humidityrelative1_raw`
 
-### Read Values
+### Sysfs Paths to Read Values
 
-```bash
-cat /sys/bus/iio/devices/iio:device0/in_temp0_raw
-cat /sys/bus/iio/devices/iio:device0/in_humidityrelative1_raw
-```
+$ cat /sys/bus/iio/devices/iio:device0/in_temp0_raw
+$ cat /sys/bus/iio/devices/iio:device0/in_humidityrelative1_raw
 
+2. Scripted Testing with test_env-comb.c
 ### Transfer & Run Test Script
 
 Copy the following to the QEMU target via SSH:
-
-* `env-combo.ko`
-* `envcombo_sim.ko`
-* `test_env-combo.sh`
-
+* test_env-combo.sh
 Run the test script:
 
-```bash
-chmod +x test_env-combo.sh
-./test_env-combo.sh
-```
+$ chmod +x test_env-combo.sh
+$ ./test_env-combo.sh
 
 This script will:
-
 * Load both modules
 * Verify sysfs entries
 * Read and print the implemented functionality
@@ -150,18 +139,11 @@ This script will:
 
 No module parameters are required or implemented currently.
 
-## Sysfs Paths to Verify
-
-* `/sys/bus/iio/devices/iio:device0/in_temp0_raw`
-* `/sys/bus/iio/devices/iio:device0/in_humidityrelative1_raw`
-
 ## Additional Considerations
 
 * Ensure kernel configuration changes for IIO are persistent by saving the `.config` file from menuconfig.
 * Use Yocto devshell to ensure access to the correct cross-compiler toolchain.
 * Be mindful that `bitbake virtual/kernel` may overwrite menuconfig changes unless saved appropriately.
-
----
 
 Author: Sami Natshe
 License: GPLv2
