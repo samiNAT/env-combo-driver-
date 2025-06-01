@@ -29,6 +29,7 @@ This Linux kernel module implements a fictional I2C environmental sensor driver 
    IMAGE_INSTALL:append = " kernel-devsrc"
 
 6. Enable IIO Subsystem:
+   
    $ bitbake -c menuconfig virtual/kernel
 
    Then in the menu:
@@ -41,10 +42,12 @@ This Linux kernel module implements a fictional I2C environmental sensor driver 
        [*] Maximum number of consumers per trigger
        [*] Enable triggered events support
 
-7. Rebuild the Kernel:
+8. Rebuild the Kernel:
+   
    $ bitbake virtual/kernel
 
-8. Build Image with Kernel Headers:
+10. Build Image with Kernel Headers:
+    
    $ bitbake core-image-minimal
 
 ### Out-of-Tree Module Build
@@ -52,13 +55,14 @@ This Linux kernel module implements a fictional I2C environmental sensor driver 
 To compile the driver out-of-tree using the appropriate cross-compiler, follow these steps:
 
 1. Open the QEMU devshell to use the correct Yocto environmen
+   
    $ bitbake -c devshell virtual/kernel
 
-2. Inside the devshell, navigate to the module source directory and run:
+3. Inside the devshell, navigate to the module source directory and run:
 
    $ make KDIR=/path/to/linux-qemuarm64-standard-build
 
-3. To clean the build:
+4. To clean the build:
 
    $ make -C /path/to/linux-qemuarm64-standard-build M=$PWD clean
 
